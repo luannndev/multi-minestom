@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.commits[0].message, '[ci-skip]')"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check file existence and permissions
+        run: |
+          echo "Checking if gradlew exists"
+          if [ -f "./gradlew" ]; then
+            echo "gradlew exists"
+            echo "Checking permissions"
+            ls -l ./gradlew
+          else
+            echo "gradlew does not exist"
+            exit 1
+          fi
+
+      - name: Ensure gradlew is executable
+        run: chmod +x ./gradlew
+
+      - name: Re-check permissions
+        run: ls -l ./gradlew
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: 'gradle'
+
+      - uses: gradle/wrapper-validation-action@v2
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: Gradle Build
+        run: ./gradlew build --no-daemon --stacktrace
