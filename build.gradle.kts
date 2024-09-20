@@ -7,6 +7,12 @@ plugins {
 group = "dev.luan.server"
 version = "1.0-SNAPSHOT"
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+}
+
 dependencies {
     compileOnly(fileTree("libs") {
         include("*.jar")

@@ -1,4 +1,9 @@
 package dev.luan.server;
 
-public class ServerBootstrap {
+public final class ServerBootstrap {
+
+    public static void main(String[] args) {
+        System.setProperty("multiminestom.startup", String.valueOf(System.currentTimeMillis()));
+
+    }
 }
